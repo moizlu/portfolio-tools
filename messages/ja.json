@@ -38,5 +38,7 @@
 	"reset_everything": "全てをリセットする",
 	"great_smug_tuna_pause": "注: 作業開始時と休憩開始時で違う音が鳴ります。",
 	"volume": "ボリューム",
-	"test": "テスト"
+	"test": "テスト",
+	"times": "回",
+	"show_notification": "通知を表示する"
 }

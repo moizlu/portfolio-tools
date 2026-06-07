@@ -8,6 +8,7 @@ export const schema = z.object({
     stateTransCount: z.number().min(1),
     longBreakInterval: z.number().min(1).max(99),
     volume: z.number().min(0).max(1),
+    sendNotification: z.boolean(),
 
     sessionSec: z.object<Record<PomodoroType.Session, z.ZodNumber>>({
         "working": z.number().min(1 * 60).max(99 * 60),
@@ -22,6 +23,7 @@ export const DefaultValues: z.infer<typeof schema> = {
     stateTransCount: 1,
     longBreakInterval: 4,
     volume: 0.5,
+    sendNotification: false,
 
     sessionSec: {
         "working": 25 * 60,

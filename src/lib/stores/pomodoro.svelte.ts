@@ -4,8 +4,11 @@ import { PomodoroType } from "$lib/types";
 import { PomodoroSchema } from "$lib/schema";
 import { LocalStorageManager } from "$lib/utils";
 import type { Session } from "$lib/types/pomodoro";
+import { untrack } from "svelte";
 
 const pomodoroTimerUpdatedEvent = new Event('PomodoroTimer.Updated');
+
+// NOTE: データを書き込む時はStore.copiedDataでコピーした値を、読み込む時はStore.data(ゲッター)を使うこと
 
 export class Store {
     public constructor() {
@@ -18,9 +21,13 @@ export class Store {
         return this._dataManager.copiedData;
     }
 
-    public save(newData: z.infer<typeof PomodoroSchema.schema>) {
-        this._data = newData;
-        this.saveToManager();
+    public get data() { return this._data; }
+
+    public save(newData: Partial<z.infer<typeof PomodoroSchema.schema>>) {
+        untrack(() => {
+            this._data = { ...this._data, ...newData };
+            this.saveToManager();
+        })
     }
 
     public skip() {

@@ -1,4 +1,6 @@
 <script lang="ts">
+    import FocusIcon from "$lib/assets/icons/focus.svg";
+    import BreakIcon from "$lib/assets/icons/coffee-break.svg";
     import PlayIcon from "$lib/assets/icons/play.svelte";
     import PauseIcon from "$lib/assets/icons/pause.svelte";
     import ResetIcon from "$lib/assets/icons/reset.svelte";
@@ -30,12 +32,18 @@
     let startBreakSound: HTMLAudioElement | undefined = undefined;
     let startFocusSound: HTMLAudioElement | undefined = undefined;
 
-    $effect(() => { store.save(data); });
+    $effect(() => {
+        store.save(data);
+        // const { ...saveObj } = data;
+        // untrack(() => {
+        //     store.save(saveObj);
+        // })
+    });
 
     const sessionName = $derived(SessionNames[store.session]);
 
     const displayTime = $derived.by(() => {
-        const sec = store.currentSessionSec - data.elapsedSec
+        const sec = store.currentSessionSec - store.data.elapsedSec
         const minPart = Math.floor(sec / 60).toFixed(0).padStart(2, '0');
         const secPart = (sec % 60).toFixed(0).padStart(2, '0');
 
@@ -59,6 +67,14 @@
                     case "long-breaking":
                         startBreakSound?.play();
                         break;
+                }
+
+                if ((Notification.permission === "granted") && store.data.sendNotification) {
+
+                    new Notification(m.pomodoro_timer(), {
+                        body: sessionName,
+                        icon: (store.session === "working") ? FocusIcon : BreakIcon
+                    })
                 }
             }
         }
@@ -99,7 +115,7 @@
         store.paused = true;
     })
 
-    const progress = $derived(data.elapsedSec / store.currentSessionSec)
+    const progress = $derived(store.data.elapsedSec / store.currentSessionSec)
 </script>
 
 <svelte:head>
@@ -149,11 +165,11 @@
     </div>
     
     <div class="flex flex-col justify-center items-center gap-2">
-        <p class="text-2xl">{m.the_n_th_session({ num: Math.ceil(data.stateTransCount / 2) })}</p>
+        <p class="text-2xl">{m.the_n_th_session({ num: Math.ceil(store.data.stateTransCount / 2) })}</p>
 
         <div class="relative w-50 flex flex-col justify-center items-center">
             <p class="font-bold text-center text-3xl">{sessionName}</p>
-            <p class="sm:absolute sm:top-[50%] sm:right-0 sm:translate-x-full sm:translate-y-[-50%] sm:text-left">{m.session_next({ next: SessionNames[store.calcSession({ ...data, stateTransCount: data.stateTransCount + 1  })] })}</p>
+            <p class="sm:absolute sm:top-[50%] sm:right-0 sm:translate-x-full sm:translate-y-[-50%] sm:text-left">{m.session_next({ next: SessionNames[store.calcSession({ ...data, stateTransCount: store.data.stateTransCount + 1  })] })}</p>
         </div>
 
         <CircularProgressBar {progress} progressBarClass={[(store.session === "working") ? "stroke-main" : "stroke-information"]}>

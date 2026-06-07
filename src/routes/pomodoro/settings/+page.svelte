@@ -16,7 +16,7 @@
     const store = pomodoro.store;
     // console.log(store)
     const data = store.copiedData;
-    const fieldValues: Pick<z.infer<typeof PomodoroSchema.schema>, "sessionSec" | "volume" | "longBreakInterval"> = $state({
+    const fieldValues: Pick<z.infer<typeof PomodoroSchema.schema>, "sessionSec" | "volume" | "longBreakInterval" | "sendNotification"> = $state({
         sessionSec: {
             "working": data.sessionSec["working"] / 60,
             "short-breaking": data.sessionSec["short-breaking"] / 60,
@@ -24,6 +24,7 @@
         },
         volume: data.volume,
         longBreakInterval: data.longBreakInterval,
+        sendNotification: data.sendNotification
     });
     // $effect(() => { store.save(data); })
 
@@ -36,17 +37,15 @@
 
         testSound.volume = raw.volume;
 
-        // dataを依存関係に入れると無限ループになる
-        untrack(() => {
-            store.save({ ...data,
-                sessionSec: {
-                    "working": raw.sessionSec["working"] * 60,
-                    "short-breaking": raw.sessionSec["short-breaking"] * 60,
-                    "long-breaking": raw.sessionSec["long-breaking"] * 60,
-                },
-                volume: raw.volume,
-                longBreakInterval: raw.longBreakInterval
-            });
+        store.save({
+            sessionSec: {
+                "working": raw.sessionSec["working"] * 60,
+                "short-breaking": raw.sessionSec["short-breaking"] * 60,
+                "long-breaking": raw.sessionSec["long-breaking"] * 60,
+            },
+            volume: raw.volume,
+            longBreakInterval: raw.longBreakInterval,
+            sendNotification: raw.sendNotification
         });
     });
 
@@ -55,7 +54,19 @@
         fieldValues.sessionSec["short-breaking"] = PomodoroSchema.DefaultValues.sessionSec["short-breaking"] / 60;
         fieldValues.sessionSec["long-breaking"] = PomodoroSchema.DefaultValues.sessionSec["long-breaking"] / 60;
         fieldValues.volume = PomodoroSchema.DefaultValues.volume;
+        fieldValues.sendNotification = PomodoroSchema.DefaultValues.sendNotification;
         fieldValues.longBreakInterval = PomodoroSchema.DefaultValues.longBreakInterval;
+    }
+
+    const onNotificationChanged = async (event: Event & { currentTarget: EventTarget & HTMLInputElement; }) => {
+        if (event.currentTarget.checked) {
+            const result = await Notification.requestPermission();
+            fieldValues.sendNotification = (result === "granted");
+        } else {
+            fieldValues.sendNotification = false;
+        }
+
+        console.log(fieldValues.sendNotification)
     }
 
     onMount(() => {
@@ -101,7 +112,13 @@
                 <th>{m.long_break_interval()}</th>
                 <td>
                     <input type="number" bind:value={fieldValues.longBreakInterval} min={1} max={99} class="input-general" >
-                    <span>{m.minutes()}</span>
+                    <span>{m.times()}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>{m.show_notification()}</th>
+                <td class="">
+                        <input type="checkbox" bind:checked={fieldValues.sendNotification} onchange={onNotificationChanged} class="toggle-switch" >
                 </td>
             </tr>
             <tr class="flex-col">
