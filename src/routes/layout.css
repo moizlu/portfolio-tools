@@ -149,14 +149,14 @@ header {
 }
 
 .toggle-switch {
-    @apply appearance-none relative w-15 h-7 bg-base-accent rounded-lg border-label border-b-2 cursor-pointer;
+    @apply appearance-none relative w-15 h-7 bg-base-accent rounded-lg border-label  border-b-2 cursor-pointer;
 
     &::before{
-        @apply transition-all duration-100 absolute content-[''] w-5 h-5 top-1 left-1 bg-main rounded-sm;
+        @apply transition-all duration-100 absolute content-[''] w-5 h-5 top-1 left-1 bg-label rounded-sm;
     }
 
     &:checked::before {
-        @apply translate-x-8;
+        @apply translate-x-8 bg-main;
     }
 }
 
