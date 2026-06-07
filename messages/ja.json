@@ -41,5 +41,6 @@
 	"test": "テスト",
 	"times": "回",
 	"show_notification": "通知を表示する",
-	"start": "開始"
+	"start": "開始",
+	"early_inner_giraffe_trip": "モバイルブラウザなどでは動作が安定しない可能性があります。"
 }
