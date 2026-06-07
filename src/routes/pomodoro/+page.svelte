@@ -72,7 +72,7 @@
                 if ((Notification.permission === "granted") && store.data.sendNotification) {
 
                     new Notification(m.pomodoro_timer(), {
-                        body: sessionName,
+                        body: `${m.start()} | ${sessionName}`,
                         icon: (store.session === "working") ? FocusIcon : BreakIcon
                     })
                 }

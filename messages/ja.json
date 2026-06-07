@@ -40,5 +40,6 @@
 	"volume": "ボリューム",
 	"test": "テスト",
 	"times": "回",
-	"show_notification": "通知を表示する"
+	"show_notification": "通知を表示する",
+	"start": "開始"
 }

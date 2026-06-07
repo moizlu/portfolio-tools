@@ -40,6 +40,6 @@
 	"volume": "Volume",
 	"test": "Test",
 	"times": "times",
-	"show_notification": "Show notification"
-
+	"show_notification": "Show notification",
+	"start": "Start"
 }
