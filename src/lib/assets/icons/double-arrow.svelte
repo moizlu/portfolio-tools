@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { SvgComponentProps } from "$lib/types";
-    const { size,  class: className }: SvgComponentProps = $props();
+    const { width, height,  class: className }: SvgComponentProps = $props();
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" height={size} viewBox="0 -960 960 960" width={size} class={className}>
-    <path d="M296-251.69 267.69-280 480-492.31 692.31-280 664-251.69 480-435.46 296-251.69Zm0-240L267.69-520 480-732.31 692.31-520 664-491.69 480-675.46 296-491.69Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" {width} {height} viewBox="0 -960 960 960" class={className}>
+  <path d="M 790,-212 510,-412 230,-212 v -98 l 280,-200 280,200 z m 0,-238 -280,-200 -280,200 v -98 l 280,-200 280,200 z" />
 </svg>

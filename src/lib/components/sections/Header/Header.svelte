@@ -1,31 +1,23 @@
 <script lang="ts">
     import ToolsIcon from "$lib/assets/icons/tools.svelte";
+    import ChangeLangButton from "$lib/components/ui/ChangeLangButton";
+    import ChangeThemeButton from "$lib/components/ui/ChangeThemeButton";
+
+    import { resolve } from "$app/paths";
+    import { m } from "$lib/paraglide/messages";
 
     import SvgIcon from "$lib/components/ui/SvgIcon";
-
-    import { toolState } from "$lib/state/state.svelte";
-    import ThemeButton from "./ThemeButton.svelte";
 </script>
 
-<header class="fixed w-full h-12.5 z-100 bg-base flex justify-between items-center px-3">
-    <a href="/" title="ホームに戻る" class="h-full flex-center gap-2">
-        <SvgIcon Svg={ToolsIcon} size={30} class="text-label" />
-        <p class="hidden sm:block">ツール集</p>
+<header class="fixed top-0 left-0 px-2 w-full h-15 bg-base/50 backdrop-blur-sm flex justify-between items-center">
+    <a href={resolve("/")} class="flex justify-center items-center">
+        <SvgIcon Svg={ToolsIcon} size={40} />
+        <p>{m.tools()}</p>
     </a>
 
-    <p class="title-text text-3xl">
-        {#if toolState.current}
-            {toolState.currentInfo?.name}
-        {:else}
-            ツール集
-        {/if}
-    </p>
-
-    <ThemeButton />
+    <div class="flex justify-center items-center gap-2">
+        <ChangeLangButton />
+        <div class="w-[0.5px] h-10 bg-label"></div>
+        <ChangeThemeButton />
+    </div>
 </header>
-
-<style>
-    .title-text {
-        font-size: clamp(5px, 6cqw, 40px);
-    }
-</style>

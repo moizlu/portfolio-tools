@@ -1,0 +1,43 @@
+<div class="container flex justify-center items-center gap-2">
+    <div class="dot start"></div>
+    <div class="dot middle"></div>
+    <div class="dot middle"></div>
+    <div class="dot end"></div>
+</div>
+
+<style>
+    @reference "../../../../routes/layout.css";
+
+    @layer components {
+        .container {
+            --loading-animation-speed: 0.5s;
+            --loading-animation-distance: calc(1.74rem / 2);
+        }
+
+        @keyframes dot-move {
+            from { translate: calc(var(--loading-animation-distance) * -1) 0; }
+            to { translate: var(--loading-animation-distance) 0; }
+        }
+
+        @keyframes fade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .dot {
+            @apply w-5 h-5 rounded-sm bg-main;
+        }
+
+        .start {
+            animation: var(--loading-animation-speed) linear infinite both dot-move, var(--loading-animation-speed) ease-out infinite both fade;
+        }
+
+        .middle {
+            animation: var(--loading-animation-speed) linear infinite both dot-move;
+        }
+
+        .end {
+            animation: var(--loading-animation-speed) linear infinite both dot-move, var(--loading-animation-speed) ease-in infinite reverse both fade;
+        }
+    }
+</style>

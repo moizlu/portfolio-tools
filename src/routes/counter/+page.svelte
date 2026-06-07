@@ -3,79 +3,36 @@
     import MinusIcon from "$lib/assets/icons/minus.svelte";
     import ResetIcon from "$lib/assets/icons/reset.svelte";
 
-    import { onMount } from "svelte";
-    import { z } from "zod";
+    import { m } from "$lib/paraglide/messages";
 
+    import { CounterSchema } from "$lib/schema";
     import SvgIcon from "$lib/components/ui/SvgIcon";
-    import InputNumber from "$lib/components/ui/InputNumber";
-    import { toolState } from "$lib/state/state.svelte";
-    import { copyExistsProps, loadSavedData } from "$lib/utils";
-    import { toast } from "$lib/components/ui/Toast";
+    import { LocalStorageManager } from "$lib/utils";
 
-    const StateSchema = z.object({
-        count: z.number(),
-        incremental: z.number().min(1)
-    });
+    const dataManager = new LocalStorageManager("counter", CounterSchema.schema, { value: 0, incremental: 1 });
+    const data = $state(dataManager.copiedData);
 
-    let pageState = $state({
-        count: 0,
-        incremental: 1
-    });
+    $effect(() => { dataManager.save(data); });
 
-    let inputValues = $state({
-        incremental: 1
-    });
-
-    const onNumberChange = () => {
-        if (inputValues.incremental < 1) {
-            inputValues.incremental = 1;
-            toast.push({ text: "増分の値は1以上である必要があります。" });
-        }
-        pageState.incremental = inputValues.incremental;
-    }
-
-    onMount(() => {
-        toolState.current = 'counter';
-
-        pageState = loadSavedData('counter', pageState, StateSchema);
-        inputValues = copyExistsProps(pageState, inputValues);
-    });
-
-    $effect(() => {
-        localStorage.setItem('counterState', JSON.stringify(pageState));
-    });
+    const handleIncrease = () => { data.value += data.incremental; }
+    const handleDecrease = () => { data.value -= data.incremental; }
+    const handleReset = () => { data.value = 0; }
 </script>
 
-<svelte:head>
-    <title>カウンター | moizlu</title>
-</svelte:head>
+<main class="w-full flex flex-col justify-center items-center gap-5">
+    <h1>{m.counter()}</h1>
 
-<main class="mx-auto px-5 w-full max-w-150 h-full min-h-svh overflow-y-auto flex-col-center overflow-x-clip border-label">
-    <h1 class="m-2 p-2 w-full text-right count-text border rounded-xl">{pageState.count}</h1>
+    <p class="text-6xl font-bold">{data.value}</p>
 
-    <p class="text-xl">増分</p>
-    <InputNumber bind:value={inputValues.incremental} onValueChange={onNumberChange} class="w-30 text-right" />
-
-    <div class="flex-col-center">
-        <div class="mt-10 flex-center">
-            <button title="+" onclick={() => pageState.count += pageState.incremental} class="mr-10 cursor-pointer rounded-full border-2">
-                <SvgIcon Svg={PlusIcon} size={80} />
-            </button>
-            <button title="-" onclick={() => pageState.count -= pageState.incremental} class="cursor-pointer rounded-full border-2">
-                <SvgIcon Svg={MinusIcon} size={80} />
-            </button>
+    <div class="flex flex-col justify-center items-center gap-5">
+        <label class="flex flex-col sm:flex-row justify-center items-center sm:gap-2">
+            <p>{m.incremental()}</p>
+            <input title={m.incremental()} bind:value={data.incremental} type="number" class="input-general text-right">
+        </label>
+        <div class="flex justify-center items-center gap-5">
+            <button title={m.increase()} onclick={handleIncrease} class="p-2 cursor-pointer button-general button-base"><SvgIcon Svg={PlusIcon} size={40} class="w-15 h-15" /></button>
+            <button title={m.decrease()} onclick={handleDecrease} class="p-2 cursor-pointer button-general button-base"><SvgIcon Svg={MinusIcon} size={40} class="w-15 h-15" /></button>
+            <button title={m.reset()} onclick={handleReset} class="p-2 cursor-pointer button-general button-base"><SvgIcon Svg={ResetIcon} size={40} class="w-7 h-7" /></button>
         </div>
-
-        <button title="reset" onclick={() => pageState.count = 0} class="cursor-pointer rounded-full border-2">
-            <SvgIcon Svg={ResetIcon} size={60} />
-        </button>
     </div>
 </main>
-
-<style>
-    @reference "../layout.css";
-
-    .count-text {
-        font-size: clamp(10px, 25cqw, 30px);
-    }
-</style>
