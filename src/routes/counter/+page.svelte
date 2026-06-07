@@ -19,6 +19,10 @@
     const handleReset = () => { data.value = 0; }
 </script>
 
+<svelte:head>
+    <title>{data.value} | {m.counter()} | moizlu</title>
+</svelte:head>
+
 <main class="w-full flex flex-col justify-center items-center gap-5">
     <h1>{m.counter()}</h1>
 
