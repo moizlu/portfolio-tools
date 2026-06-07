@@ -67,7 +67,7 @@
     <title>{m.settings()} | {m.pomodoro_timer()} | moizlu</title>
 </svelte:head>
 
-<main class="relative w-full max-w-200 mx-auto flex flex-col justify-center items-center gap-5">
+<main class="relative w-full max-w-200 mx-auto px-4 flex flex-col justify-center items-center gap-5">
     <a title={m.return()} href={resolve("/pomodoro")} class="absolute top-0 right-0 rounded-lg bg-base/50 backdrop-blur-sm">
         <SvgIcon Svg={CloseIcon} size={40} />
     </a>
@@ -105,15 +105,15 @@
                 </td>
             </tr>
             <tr class="flex-col">
-                <th>ボリューム</th>
+                <th>{m.volume()}</th>
                 <td class="flex flex-col justify-center items-center gap-2">
                     <div class="flex justify-center items-center gap-2">
                         <input type="range" bind:value={fieldValues.volume} min={0} max={1} step={0.1} class="input-range-general" >
                         <button onclick={() => testSound?.play()} class="p-2 button-general button-base cursor-pointer">
-                            <p>テスト</p>
+                            <p>{m.test()}</p>
                         </button>
                     </div>
-                    <p class="text-xs">注: 作業開始時と休憩開始時で違う音が鳴ります。</p>
+                    <p class="text-xs">{m.great_smug_tuna_pause()}</p>
                 </td>
             </tr>
         </tbody>

@@ -35,6 +35,8 @@
 	"how_to_use": "How to use",
 	"sunny_plane_opossum_expand": "Restart the session (e.g., if you were interrupted while focusing)",
 	"play_pause": "Play/Pause",
-	"reset_everything": "Reset everything"
-
+	"reset_everything": "Reset everything",
+	"great_smug_tuna_pause": "Note: Different sounds play when you start working and when you start a break.",
+	"volume": "Volume",
+	"test": "Test"
 }
