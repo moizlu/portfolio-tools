@@ -5,7 +5,7 @@
 
     import { m } from "$lib/paraglide/messages";
     import { resolve } from "$app/paths";
-    import { onMount, untrack } from "svelte";
+    import { onMount } from "svelte";
     import { z } from "zod";
     import { getLocale } from "$lib/paraglide/runtime";
 
@@ -65,8 +65,6 @@
         } else {
             fieldValues.sendNotification = false;
         }
-
-        console.log(fieldValues.sendNotification)
     }
 
     onMount(() => {
