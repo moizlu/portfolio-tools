@@ -36,6 +36,11 @@ export class Store {
         this.saveToManager();
     }
 
+    public retrySession() {
+        this._data.elapsedSec = 0;
+        this.saveToManager();
+    }
+
     public resetTimer() {
         this._paused = true;
         this._session = "working";
