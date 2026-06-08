@@ -70,7 +70,7 @@
                         break;
                 }
 
-                if (now - lastSessionUpdatedMs >= (10 * 1000)) {
+                if (now - lastSessionUpdatedMs >= (30 * 1000)) {
                     if ((Notification.permission === "granted") && store.data.sendNotification) {
                         notificationWorker?.showNotification(m.pomodoro_timer(), {
                             body: `${m.start()} | ${sessionName}`,
