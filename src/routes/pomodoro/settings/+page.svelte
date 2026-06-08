@@ -116,7 +116,7 @@
             <tr>
                 <th>
                     {m.show_notification()}
-                    <p class="text-xs">{m.early_inner_giraffe_trip()}</p>
+                    <!-- <p class="text-xs">{m.early_inner_giraffe_trip()}</p> -->
                 </th>
                 <td class="">
                         <input type="checkbox" bind:checked={fieldValues.sendNotification} onchange={onNotificationChanged} class="toggle-switch" >
