@@ -28,9 +28,12 @@
     const store = pomodoro.store;
     const data = $state(store.copiedData);
     let timerWorker: Worker | undefined = $state(undefined);
+    let notificationWorker: ServiceWorkerRegistration | undefined = $state(undefined);
 
     let startBreakSound: HTMLAudioElement | undefined = undefined;
     let startFocusSound: HTMLAudioElement | undefined = undefined;
+
+    const progress = $derived(store.data.elapsedSec / store.currentSessionSec);
 
     $effect(() => {
         store.save(data);
@@ -70,13 +73,16 @@
                 }
 
                 if ((Notification.permission === "granted") && store.data.sendNotification) {
-
-                    new Notification(m.pomodoro_timer(), {
+                    notificationWorker?.showNotification(m.pomodoro_timer(), {
                         body: `${m.start()} | ${sessionName}`,
                         icon: (store.session === "working") ? FocusIcon : BreakIcon
                     })
                 }
             }
+        }
+
+        if ('serviceWorker' in navigator) {
+            notificationWorker = await navigator.serviceWorker.register("/service-worker.js");
         }
 
         // const updateTimer = setInterval(() => { store.update(); }, 100);
@@ -114,8 +120,6 @@
         timerWorker?.terminate();
         store.paused = true;
     })
-
-    const progress = $derived(store.data.elapsedSec / store.currentSessionSec)
 </script>
 
 <svelte:head>
