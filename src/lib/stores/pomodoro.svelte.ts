@@ -1,10 +1,10 @@
 import { z } from "zod";
+import { untrack } from "svelte";
 
 import { PomodoroType } from "$lib/types";
 import { PomodoroSchema } from "$lib/schema";
-import { LocalStorageManager } from "$lib/utils";
+import { LocalStorageManager, calcDateAfterMs } from "$lib/utils";
 import type { Session } from "$lib/types/pomodoro";
-import { untrack } from "svelte";
 
 const pomodoroTimerUpdatedEvent = new Event('PomodoroTimer.Updated');
 
@@ -22,6 +22,14 @@ export class Store {
     }
 
     public get data() { return this._data; }
+
+    public finishDate(session: Session, elapsedSec: number = 0): Date {
+        return calcDateAfterMs((this._data.sessionSec[session] - elapsedSec) * (60 * 1000));
+    }
+
+    public get finishCurrentSessionDate() {
+        return this.finishDate(this.session, this._data.elapsedSec);
+    }
 
     public save(newData: Partial<z.infer<typeof PomodoroSchema.schema>>) {
         untrack(() => {

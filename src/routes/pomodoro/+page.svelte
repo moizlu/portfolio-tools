@@ -36,14 +36,9 @@
     const progress = $derived(store.data.elapsedSec / store.currentSessionSec);
 
     let spaceKeyPressing: boolean = false;
+    let lastSessionUpdatedMs: number = 0;
 
-    $effect(() => {
-        store.save(data);
-        // const { ...saveObj } = data;
-        // untrack(() => {
-        //     store.save(saveObj);
-        // })
-    });
+    $effect(() => { store.save(data); });
 
     const sessionName = $derived(SessionNames[store.session]);
 
@@ -62,6 +57,7 @@
 
         timerWorker.onmessage = () => {
             const sessionUpdated = store.update();
+            const now = Date.now();
 
             if (sessionUpdated) {
                 switch (store.session) {
@@ -74,24 +70,21 @@
                         break;
                 }
 
-                if ((Notification.permission === "granted") && store.data.sendNotification) {
-                    notificationWorker?.showNotification(m.pomodoro_timer(), {
-                        body: `${m.start()} | ${sessionName}`,
-                        icon: (store.session === "working") ? FocusIcon : BreakIcon
-                    })
+                if (now - lastSessionUpdatedMs >= (10 * 1000)) {
+                    if ((Notification.permission === "granted") && store.data.sendNotification) {
+                        notificationWorker?.showNotification(m.pomodoro_timer(), {
+                            body: `${m.start()} | ${sessionName}`,
+                            icon: (store.session === "working") ? FocusIcon : BreakIcon
+                        })
+                    }
                 }
+                lastSessionUpdatedMs = now;
             }
         }
 
         if ('serviceWorker' in navigator) {
             notificationWorker = await navigator.serviceWorker.register("/service-worker.js");
         }
-
-        // const updateTimer = setInterval(() => { store.update(); }, 100);
-
-        // return () => {
-        //     clearInterval(updateTimer);
-        // }
     });
 
     onMount(() => {
