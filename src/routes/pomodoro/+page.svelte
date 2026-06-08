@@ -35,6 +35,8 @@
 
     const progress = $derived(store.data.elapsedSec / store.currentSessionSec);
 
+    let spaceKeyPressing: boolean = false;
+
     $effect(() => {
         store.save(data);
         // const { ...saveObj } = data;
@@ -103,6 +105,23 @@
             }
         }
 
+        const onDocumentKeyDown = (event: KeyboardEvent) => {
+            if (event.key === " " && !spaceKeyPressing) {
+                spaceKeyPressing = true;
+                store.paused = !store.paused;
+            }
+        }
+
+        const onDocumentKeyUp = (event: KeyboardEvent) => {
+            if (event.key === " ") {
+                spaceKeyPressing = false;
+            }
+        }
+
+        // const onDocumentKeyDown = () => {
+        //     console.log("aaa")
+        // }
+
         startBreakSound = new Audio(StartBreakSound);
         startFocusSound = new Audio(StartFocusSound);
 
@@ -111,8 +130,13 @@
 
         document.addEventListener("visibilitychange", onVisibilityChange);
 
+        document.addEventListener("keydown", onDocumentKeyDown);
+        document.addEventListener("keyup", onDocumentKeyUp);
+
         return () => {
-            document.addEventListener("visibilitychange", onVisibilityChange);
+            document.removeEventListener("visibilitychange", onVisibilityChange);
+            document.removeEventListener("keydown", onDocumentKeyDown);
+            document.removeEventListener("keyup", onDocumentKeyUp);
         }
     })
 
