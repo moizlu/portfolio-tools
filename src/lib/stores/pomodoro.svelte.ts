@@ -89,10 +89,16 @@ export class Store {
         this._data.elapsedSec += elapsedSec;
 
         if (this._data.elapsedSec >= this.currentSessionSec) {
-            this._data.elapsedSec = this._data.elapsedSec - this.currentSessionSec;
-            this._data.stateTransCount += 1;
-            this._session = this.calcSession(this._data);
-            sessionUpdated = true;
+            let loopCount = 0;
+
+            do {
+                this._data.elapsedSec = this._data.elapsedSec - this.currentSessionSec;
+                this._data.stateTransCount += 1;
+                this._session = this.calcSession(this._data);
+                loopCount++;
+            } while (this._data.elapsedSec > this.currentSessionSec);
+
+            sessionUpdated = (loopCount <= 1);
         }
 
         document.dispatchEvent(pomodoroTimerUpdatedEvent);
