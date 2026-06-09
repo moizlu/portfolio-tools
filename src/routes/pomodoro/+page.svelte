@@ -44,10 +44,19 @@
 
     const displayTime = $derived.by(() => {
         const sec = store.currentSessionSec - store.data.elapsedSec
-        const minPart = Math.floor(sec / 60).toFixed(0).padStart(2, '0');
-        const secPart = (sec % 60).toFixed(0).padStart(2, '0');
+        const minInt = Math.floor(sec / 60);
+        const secInt = (sec % 60);
+        const minStr = minInt.toFixed(0).padStart(2, '0');
+        const secStr = secInt.toFixed(0).padStart(2, '0');
 
-        return { min: minPart, sec: secPart }
+        return {
+            str: {
+                min: minStr, sec: secStr
+            },
+            int: {
+                min: minInt, sec: secInt
+            }
+        }
     });
 
     onMount(async () => {
@@ -140,7 +149,7 @@
 </script>
 
 <svelte:head>
-    <title>{store.paused ? "⏸| " : ""}{`${displayTime.min}:${displayTime.sec}`} | {sessionName} | {m.pomodoro_timer()} | moizlu</title>
+    <title>{store.paused ? "⏸| " : ""}{`${displayTime.str.min}:${displayTime.str.sec}`} | {sessionName} | {m.pomodoro_timer()} | moizlu</title>
 </svelte:head>
 
 {#snippet resetDialog()}

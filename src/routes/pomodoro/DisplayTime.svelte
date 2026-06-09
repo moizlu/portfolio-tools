@@ -2,10 +2,16 @@
     import { onMount } from "svelte";
 
     interface Props {
-        min: string;
-        sec: string;
+        str: {
+            min: string;
+            sec: string;
+        };
+        int: {
+            min: number;
+            sec: number;
+        }
     }
-    const { min, sec }: Props = $props();
+    const { str, int }: Props = $props();
 
     let timerColonEl: HTMLSpanElement | undefined = $state(undefined);
     let timerColonAnimation: Animation | undefined = $state(undefined);
@@ -14,11 +20,11 @@
     $effect(() => {
         if (!timerColonAnimation) { return; }
 
-        if (lastSec !== undefined && lastSec === sec) {
+        if (lastSec !== undefined && lastSec === str.sec) {
             return;
         }
 
-        lastSec = sec;
+        lastSec = str.sec;
 
         // timerColonAnimation.cancel();
         timerColonAnimation.play();
@@ -44,7 +50,7 @@
 </script>
 
 <p class="h-full flex justify-center items-center text-6xl font-bold">
-    {min}<span bind:this={timerColonEl} class="timer-colon">:</span>{sec}
+    {(int.min > 0) ? str.min : "00"}<span bind:this={timerColonEl} class="timer-colon">:</span>{(int.sec > 0) ? str.sec : "00"}
 </p>
 
 <style>
