@@ -197,6 +197,10 @@
             <DisplayTime {...displayTime} />
         </CircularProgressBar>
 
+        <!-- {#if Number(displayTime.min) <= 10}
+            <p class="text-xs text-center mb-5">タイマーの処理が長期間行われなかったようです。再生ボタンをおすと固まる可能性がありますが、処理は進行していますのでお待ちください。</p>
+        {/if} -->
+
         <div class="relative flex justify-center items-center gap-5">
             <button onclick={() => modalWindow.open({ contents: helpDialog, size: "mx-4 w-full max-w-100 h-60", title: m.how_to_use()} )} 
                     class="absolute -top-3 -right-3 cursor-pointer">
