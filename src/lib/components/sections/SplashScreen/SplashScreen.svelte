@@ -36,7 +36,7 @@
 </div>
 
 <style>
-    @reference "../../../../routes/layout.css";
+    @reference "src/routes/layout.css";
 
     @layer components {
         @keyframes opacity-20-80 {

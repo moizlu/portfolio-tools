@@ -144,7 +144,7 @@
 </main>
 
 <style>
-    @reference "../../layout.css";
+    @reference "src/routes/layout.css";
 
     th {
         @apply text-left font-normal;

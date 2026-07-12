@@ -159,7 +159,7 @@
 
         <div class="w-50 h-10 flex justify-center items-center gap-5">
             <button onclick={() => { store.resetTimer(); modalWindow.close() }}
-                    class="flex-1 h-full button-general cursor-pointer bg-danger/50 hover:bg-danger/70 active:bg-danger/90">
+                    class="flex-1 h-full button-general cursor-pointer bg-danger text-neutral-100 hover:opacity-90 active:opacity-80">
                 <p>{m.yes()}</p>
             </button>
             <button onclick={() => modalWindow.close()} class="flex-1 h-full button-general button-base cursor-pointer">

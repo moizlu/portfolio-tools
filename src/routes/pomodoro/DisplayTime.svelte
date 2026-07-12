@@ -54,7 +54,7 @@
 </p>
 
 <style>
-    @reference "../layout.css";
+    @reference "src/routes/layout.css";
 
     @keyframes opacity-20-80 {
         20%, 80% {

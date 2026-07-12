@@ -45,7 +45,7 @@ header {
     --spacing-safe-top: env(safe-area-inset-top);
     --spacing-safe-bottom: env(safe-area-inset-bottom);
     --spacing-safe-left: env(safe-area-inset-left);
-    --spacing-safe-light: env(safe-area-inset-right);
+    --spacing-safe-right: env(safe-area-inset-right);
 
     --spacing-safe-x: env(safe-area-inset-left);
     --spacing-safe-y: env(safe-area-inset-bottom);
@@ -107,48 +107,48 @@ header {
 }
 
 /* @layer components { */
-.flex-center {
+@utility flex-center {
     @apply flex items-center justify-center;
 }
 
-.inline-link {
+@utility inline-link {
     @apply transition-all duration-300 text-sky-700 dark:text-sky-400 hover:text-sky-200 underline;
 }
 
-.button-general {
+@utility button-general {
     @apply transition-all duration-300 rounded-lg shadow-black shadow-md/50 hover:shadow-md/25 active:shadow-sm/25;
 }
 
-.button-base {
+@utility button-base {
     @apply bg-base hover:bg-label/5 active:bg-label/40;
 }
 
-.button-label {
+@utility button-label {
     @apply text-base bg-label hover:bg-label/80 active:bg-label/60;
 }
 
-.input-general {
+@utility input-general {
     @apply transition-all duration-100 relative p-1 bg-base-accent rounded-sm border-label border-b-2;
+
+    &:focus {
+        @apply bg-label/3 border-label/20 ring-label ring-1;
+        outline: none;
+    }
 }
 
-.input-general:focus {
-    @apply bg-label/3 border-label/20 ring-label ring-1;
-    outline: none;
-}
-
-.input-range-general {
+@utility input-range-general {
     @apply appearance-none bg-base-accent border-label border-b-2 rounded-sm cursor-pointer;
+
+    &::-webkit-slider-thumb {
+        @apply appearance-none -ml-px m-0.5 w-3 h-3 bg-main rounded-sm;
+    }
+        
+    &::-moz-range-thumb {
+        @apply appearance-none -ml-px m-0.5 w-3 h-3 bg-main rounded-sm;
+    }
 }
 
-.input-range-general::-webkit-slider-thumb {
-    @apply appearance-none -ml-px m-0.5 w-3 h-3 bg-main rounded-sm;
-}
-    
-.input-range-general::-moz-range-thumb {
-    @apply appearance-none -ml-px m-0.5 w-3 h-3 bg-main rounded-sm;
-}
-
-.toggle-switch {
+@utility toggle-switch {
     @apply appearance-none relative w-15 h-7 bg-base-accent rounded-lg border-label  border-b-2 cursor-pointer;
 
     &::before{

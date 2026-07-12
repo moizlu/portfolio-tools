@@ -30,7 +30,7 @@
 </div>
 
 <style>
-    @reference "../../../../routes/layout.css";
+    @reference "src/routes/layout.css";
 
     .progress-background {
         @apply fill-transparent stroke-5 stroke-label;
