@@ -10,6 +10,7 @@
     import HelpIcon from "$lib/assets/icons/help.svelte";
     import StartBreakSound from "$lib/assets/sounds/alarm1.mp3";
     import StartFocusSound from "$lib/assets/sounds/alarm2.mp3";
+    import PipIcon from "$lib/assets/icons/pip.svelte";
 
     import { onDestroy, onMount } from "svelte";
     import { m } from "$lib/paraglide/messages";
@@ -42,6 +43,87 @@
         const s = totalSec % 60;
         return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     });
+
+    let pipAvailable: boolean = $state(false);
+    let pipWindow: Window | undefined = $state(undefined);
+
+    function pipInitialHtml(): string {
+        return `<!DOCTYPE html>
+<html>
+<head>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        background: #1e1e1e;
+        color: #f5f5f5;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        font-family: "Noto Sans JP", monospace;
+        gap: 2px;
+        padding: 8px;
+        user-select: none;
+    }
+    #pip-timer { font-size: 44px; font-weight: bold; letter-spacing: 2px; line-height: 1.2; }
+    #pip-session { font-size: 14px; }
+    #pip-count { font-size: 11px; opacity: 0.5; }
+</style>
+</head>
+<body>
+    <div id="pip-timer">00:00</div>
+    <div id="pip-session"></div>
+    <div id="pip-count"></div>
+</body>
+</html>`;
+    }
+
+    function updatePiP() {
+        if (!pipWindow || pipWindow.closed) return;
+        const doc = pipWindow.document;
+        const sec = store.currentSessionSec - store.data.elapsedSec;
+        const minInt = Math.floor(sec / 60);
+        const secInt = sec % 60;
+        const minStr = minInt.toFixed(0).padStart(2, '0');
+        const secStr = secInt.toFixed(0).padStart(2, '0');
+        const isWorking = store.session === "working";
+        const accentColor = isWorking ? "#E2421F" : "#38bdf8";
+
+        doc.getElementById('pip-timer')!.textContent = `${minStr}:${secStr}`;
+        doc.getElementById('pip-session')!.textContent = sessionName;
+        doc.getElementById('pip-session')!.style.color = accentColor;
+        doc.getElementById('pip-count')!.textContent = m.the_n_th_session({ num: Math.ceil(store.data.stateTransCount / 2) });
+    }
+
+    async function togglePiP() {
+        if (pipWindow && !pipWindow.closed) {
+            pipWindow.close();
+            pipWindow = undefined;
+            return;
+        }
+
+        if (!('documentPictureInPicture' in window)) return;
+
+        const pip = await (window as Window & {
+            documentPictureInPicture: {
+                requestWindow: (o: { width: number; height: number }) => Promise<Window>;
+            }
+        }).documentPictureInPicture.requestWindow({
+            width: 280,
+            height: 180
+        });
+        pipWindow = pip;
+
+        pip.document.write(pipInitialHtml());
+        pip.document.close();
+
+        updatePiP();
+
+        pip.addEventListener('pagehide', () => {
+            pipWindow = undefined;
+        });
+    }
 
     let spaceKeyPressing: boolean = false;
     let lastSessionUpdatedMs: number = 0;
@@ -97,6 +179,8 @@
                 }
                 lastSessionUpdatedMs = now;
             }
+
+            updatePiP();
         }
 
         if ('serviceWorker' in navigator) {
@@ -105,6 +189,8 @@
     });
 
     onMount(() => {
+        pipAvailable = 'documentPictureInPicture' in window;
+
         const onVisibilityChange = () => {
             if (!timerWorker) { return; }
 
@@ -152,6 +238,7 @@
 
     onDestroy(() => {
         timerWorker?.terminate();
+        pipWindow?.close();
         store.paused = true;
     })
 </script>
@@ -218,7 +305,14 @@
             <p class="text-xs text-center mb-5">タイマーの処理が長期間行われなかったようです。再生ボタンをおすと固まる可能性がありますが、処理は進行していますのでお待ちください。</p>
         {/if} -->
 
-        <p class="text-sm text-center mt-2">{m.elapsed_time()}: {totalElapsedDisplay}</p>
+        <div class="flex justify-center items-center gap-3">
+            <p class="text-sm text-center">{m.elapsed_time()}: {totalElapsedDisplay}</p>
+            {#if pipAvailable}
+                <button onclick={togglePiP} title={pipWindow ? m.pip_exit() : m.pip_enter()} class="p-1.5 button-general button-base cursor-pointer">
+                    <SvgIcon Svg={PipIcon} size={18} />
+                </button>
+            {/if}
+        </div>
 
         <div class="relative flex justify-center items-center gap-5">
             <button onclick={() => modalWindow.open({ contents: helpDialog, size: "mx-4 w-full max-w-100 h-60", title: m.how_to_use()} )} 

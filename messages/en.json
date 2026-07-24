@@ -43,6 +43,8 @@
 	"show_notification": "Show notification",
 	"start": "Start",
 	"early_inner_giraffe_trip": "Performance may be unstable on mobile browsers and other devices.",
-	"elapsed_time": "Elapsed"
+	"elapsed_time": "Elapsed",
+	"pip_enter": "PiP",
+	"pip_exit": "Exit PiP"
 
 }
