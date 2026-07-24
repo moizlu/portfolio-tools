@@ -215,13 +215,13 @@
                     class="absolute -top-3 -right-3 cursor-pointer">
                 <SvgIcon Svg={HelpIcon} size={20} />
             </button>
-            <button onclick={() => store.retrySession()} class={["p-2", (store.session === "working" ? "cursor-pointer button-general button-base" : "bg-disabled pointer-events-none rounded-lg")]}>
+            <button onclick={() => store.retrySession()} class="p-2 cursor-pointer button-general button-base">
                 <SvgIcon Svg={ArrowIcon} size={27} class="rotate-270" />
             </button>
-            <button onclick={() => store.paused = !store.paused} class="w-15 h-15 overflow-hidden button-general button-label cursor-pointer">
-                <div class={["w-fit h-fit transition-all duration-300 flex justify-center items-center", (store.paused) && "-translate-x-15"]}>
-                    <SvgIcon Svg={PauseIcon} size={60} />
-                    <SvgIcon Svg={PlayIcon} size={60} />
+            <button onclick={() => store.paused = !store.paused} class="w-20 h-20 overflow-hidden button-general button-label cursor-pointer">
+                <div class={["w-fit h-fit transition-all duration-300 flex justify-center items-center", (store.paused) && "-translate-x-20"]}>
+                    <SvgIcon Svg={PauseIcon} size={80} />
+                    <SvgIcon Svg={PlayIcon} size={80} />
                 </div>
             </button>
 
