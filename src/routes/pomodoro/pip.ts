@@ -1,3 +1,4 @@
+import { browser } from "$app/environment";
 import { m } from "$lib/paraglide/messages";
 import { pomodoro } from "$lib/stores";
 import { SessionNames } from "$lib/types/pomodoro";
@@ -40,7 +41,7 @@ export class PiPManager {
     private _window: Window | undefined = undefined;
 
     static get available(): boolean {
-        return 'documentPictureInPicture' in window;
+        return browser && 'documentPictureInPicture' in window;
     }
 
     get active(): boolean {
@@ -72,7 +73,7 @@ export class PiPManager {
             return;
         }
 
-        if (!('documentPictureInPicture' in window)) return;
+        if (!browser || !('documentPictureInPicture' in window)) return;
 
         const pip = await (window as Window & {
             documentPictureInPicture: {
