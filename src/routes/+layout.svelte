@@ -49,6 +49,7 @@
 		script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com 'unsafe-inline';
 		style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
 		font-src 'self' https://fonts.gstatic.com;
+		connect-src 'self' https://cloudflareinsights.com;
 		frame-src 'self' https://challenges.cloudflare.com;
 		img-src 'self' data: https:;
 	">
