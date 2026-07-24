@@ -35,6 +35,14 @@
 
     const progress = $derived(store.data.elapsedSec / store.currentSessionSec);
 
+    const totalElapsedDisplay = $derived.by(() => {
+        const totalSec = store.data.totalElapsedSec;
+        const h = Math.floor(totalSec / 3600);
+        const m = Math.floor((totalSec % 3600) / 60);
+        const s = totalSec % 60;
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    });
+
     let spaceKeyPressing: boolean = false;
     let lastSessionUpdatedMs: number = 0;
 
@@ -193,7 +201,7 @@
         <h1>{m.pomodoro_timer()}</h1>
         <!-- <p class="text-xs">複数のタブで開くと挙動が不安定になります。</p> -->
     </div>
-    
+
     <div class="flex flex-col justify-center items-center gap-2">
         <p class="text-2xl">{m.the_n_th_session({ num: Math.ceil(store.data.stateTransCount / 2) })}</p>
 
@@ -209,6 +217,8 @@
         <!-- {#if Number(displayTime.min) <= 10}
             <p class="text-xs text-center mb-5">タイマーの処理が長期間行われなかったようです。再生ボタンをおすと固まる可能性がありますが、処理は進行していますのでお待ちください。</p>
         {/if} -->
+
+        <p class="text-sm text-center mt-2">{m.elapsed_time()}: {totalElapsedDisplay}</p>
 
         <div class="relative flex justify-center items-center gap-5">
             <button onclick={() => modalWindow.open({ contents: helpDialog, size: "mx-4 w-full max-w-100 h-60", title: m.how_to_use()} )} 

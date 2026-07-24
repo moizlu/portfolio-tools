@@ -5,6 +5,7 @@ import { PomodoroType } from "$lib/types";
 export const schema = z.object({
     // session: z.enum(PomodoroType.SessionList),
     elapsedSec: z.number(),
+    totalElapsedSec: z.number(),
     stateTransCount: z.number().min(1),
     longBreakInterval: z.number().min(1).max(99),
     volume: z.number().min(0).max(1),
@@ -20,6 +21,7 @@ export const schema = z.object({
 export const DefaultValues: z.infer<typeof schema> = {
     // session: "working",
     elapsedSec: 0,
+    totalElapsedSec: 0,
     stateTransCount: 1,
     longBreakInterval: 4,
     volume: 0.5,

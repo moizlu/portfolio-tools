@@ -53,6 +53,7 @@ export class Store {
         this._paused = true;
         this._session = "working";
         this._data.elapsedSec = 0;
+        this._data.totalElapsedSec = 0;
         this._data.stateTransCount = 1;
         this._lastUpdatedMs = undefined;
         this.saveToManager();
@@ -87,6 +88,7 @@ export class Store {
 
         this._lastUpdatedMs = now - delay;
         this._data.elapsedSec += elapsedSec;
+        this._data.totalElapsedSec += elapsedSec;
 
         if (this._data.elapsedSec >= this.currentSessionSec) {
             let loopCount = 0;
